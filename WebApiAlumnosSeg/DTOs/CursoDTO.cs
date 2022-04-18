@@ -1,9 +1,8 @@
 ﻿namespace WebApiAlumnosSeg.DTOs
 {
-    public class GetAlumnoDTO
+    public class CursoDTO
     {
         public int Id { get; set; }
-        public string Nombre { get; set; }
-       
+        public string Contenido { get; set; }
     }
 }

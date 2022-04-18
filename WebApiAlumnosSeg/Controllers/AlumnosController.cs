@@ -30,7 +30,10 @@ namespace WebApiAlumnosSeg.Controllers
         [HttpGet("{id:int}")] //Se puede usar ? para que no sea obligatorio el parametro /{param=Gustavo}  getAlumno/{id:int}/
         public async Task<ActionResult<GetAlumnoDTO>> Get(int id)
         {
-            var alumno = await dbContext.Alumnos.FirstOrDefaultAsync(alumnoBD => alumnoBD.Id == id);
+            var alumno = await dbContext.Alumnos
+                .Include(alumnoDB => alumnoDB.AlumnoClase)
+                .ThenInclude(alumnoClaseDB => alumnoClaseDB.Clase)
+                .FirstOrDefaultAsync(alumnoBD => alumnoBD.Id == id);
 
             if (alumno == null)
             {
@@ -66,7 +69,7 @@ namespace WebApiAlumnosSeg.Controllers
             //{
             //    Nombre = alumnoDto.Nombre
             //};
-
+           
             var alumno = mapper.Map<Alumno>(alumnoDto);
 
             dbContext.Add(alumno);

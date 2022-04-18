@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WebApiAlumnosSeg.DTOs;
 using WebApiAlumnosSeg.Entidades;
 
 namespace WebApiAlumnosSeg.Controllers
@@ -9,10 +11,12 @@ namespace WebApiAlumnosSeg.Controllers
     public class ClasesController : ControllerBase
     {
         private readonly ApplicationDbContext dbContext;
+        private readonly IMapper mapper;
 
-        public ClasesController(ApplicationDbContext context)
+        public ClasesController(ApplicationDbContext context,IMapper mapper)
         {
             this.dbContext = context;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -23,20 +27,45 @@ namespace WebApiAlumnosSeg.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<Clase>> GetById(int id)
+        public async Task<ActionResult<ClaseDTOConAlumnos>> GetById(int id)
         {
-            return await dbContext.Clases.FirstOrDefaultAsync(x => x.Id == id);
+            var clase =  await dbContext.Clases
+                .Include(claseDB => claseDB.AlumnoClase)
+                .ThenInclude(alumnoClaseDB => alumnoClaseDB.Alumno)
+                .Include(cursoDB => cursoDB.Cursos)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            clase.AlumnoClase = clase.AlumnoClase.OrderBy(x => x.Orden).ToList();
+
+            return mapper.Map<ClaseDTOConAlumnos>(clase);
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post(Clase clase)
+        public async Task<ActionResult> Post(ClaseCreacionDTO claseCreacionDTO)
         {
-            //var existeAlumno = await dbContext.Alumnos.AnyAsync(x => x.Id == clase.AlumnoId);
 
-            //if (!existeAlumno)
-            //{
-            //    return BadRequest($"No existe el alumno con el id: {clase.AlumnoId} ");
-            //}
+            if(claseCreacionDTO.AlumnosIds == null)
+            {
+                return BadRequest("No se puede crear una clase sin alumnos.");
+            }
+
+            var alumnosIds = await dbContext.Alumnos
+                .Where(alumnoBD => claseCreacionDTO.AlumnosIds.Contains(alumnoBD.Id)).Select(x => x.Id).ToListAsync();
+
+            if(claseCreacionDTO.AlumnosIds.Count != alumnosIds.Count)
+            {
+                return BadRequest("No existe uno de los alumnos enviados");
+            }
+
+            var clase = mapper.Map<Clase>(claseCreacionDTO);
+
+            if(clase.AlumnoClase != null)
+            {
+                for(int i = 0; i < clase.AlumnoClase.Count; i++)
+                {
+                    clase.AlumnoClase[i].Orden = i;
+                }
+            }
 
             dbContext.Add(clase);
             await dbContext.SaveChangesAsync();

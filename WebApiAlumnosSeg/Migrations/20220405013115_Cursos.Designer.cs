@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebApiAlumnosSeg;
 
@@ -10,9 +11,10 @@ using WebApiAlumnosSeg;
 namespace WebApiAlumnosSeg.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220405013115_Cursos")]
+    partial class Cursos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,24 +39,6 @@ namespace WebApiAlumnosSeg.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Alumnos");
-                });
-
-            modelBuilder.Entity("WebApiAlumnosSeg.Entidades.AlumnoClase", b =>
-                {
-                    b.Property<int>("AlumnoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ClaseId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Orden")
-                        .HasColumnType("int");
-
-                    b.HasKey("AlumnoId", "ClaseId");
-
-                    b.HasIndex("ClaseId");
-
-                    b.ToTable("AlumnoClase");
                 });
 
             modelBuilder.Entity("WebApiAlumnosSeg.Entidades.Clase", b =>
@@ -97,25 +81,6 @@ namespace WebApiAlumnosSeg.Migrations
                     b.ToTable("Cursos");
                 });
 
-            modelBuilder.Entity("WebApiAlumnosSeg.Entidades.AlumnoClase", b =>
-                {
-                    b.HasOne("WebApiAlumnosSeg.Entidades.Alumno", "Alumno")
-                        .WithMany("AlumnoClase")
-                        .HasForeignKey("AlumnoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("WebApiAlumnosSeg.Entidades.Clase", "Clase")
-                        .WithMany("AlumnoClase")
-                        .HasForeignKey("ClaseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Alumno");
-
-                    b.Navigation("Clase");
-                });
-
             modelBuilder.Entity("WebApiAlumnosSeg.Entidades.Cursos", b =>
                 {
                     b.HasOne("WebApiAlumnosSeg.Entidades.Clase", "Clase")
@@ -127,15 +92,8 @@ namespace WebApiAlumnosSeg.Migrations
                     b.Navigation("Clase");
                 });
 
-            modelBuilder.Entity("WebApiAlumnosSeg.Entidades.Alumno", b =>
-                {
-                    b.Navigation("AlumnoClase");
-                });
-
             modelBuilder.Entity("WebApiAlumnosSeg.Entidades.Clase", b =>
                 {
-                    b.Navigation("AlumnoClase");
-
                     b.Navigation("Cursos");
                 });
 #pragma warning restore 612, 618

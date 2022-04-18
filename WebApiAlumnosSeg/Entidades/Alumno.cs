@@ -11,6 +11,8 @@ namespace WebApiAlumnosSeg.Entidades
         [StringLength(maximumLength: 150, ErrorMessage = "El campo {0} solo puede tener hasta 150 caracteres")]
         [PrimeraLetraMayuscula]
         public string Nombre { get; set; }
+
+        public List<AlumnoClase> AlumnoClase { get; set; }
     }
 }
 

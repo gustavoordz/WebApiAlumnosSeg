@@ -10,7 +10,18 @@ namespace WebApiAlumnosSeg
 
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<AlumnoClase>()
+                .HasKey(al => new { al.AlumnoId, al.ClaseId });
+        }
+
         public DbSet<Alumno> Alumnos { get; set; }
         public DbSet<Clase> Clases { get; set; }
+        public DbSet<Cursos> Cursos { get; set; }
+
+        public DbSet<AlumnoClase> AlumnoClase { get; set; }
     }
 }
