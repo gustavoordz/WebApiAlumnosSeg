@@ -33,6 +33,19 @@ namespace WebApiAlumnosSeg.Controllers
             return mapper.Map<List<CursoDTO>>(cursos);
         }
 
+        [HttpGet("{id:int}", Name ="obtenerCurso")]
+        public async Task<ActionResult<CursoDTO>> GetById(int id)
+        {
+            var curso = await dbContext.Cursos.FirstOrDefaultAsync(cursoDB => cursoDB.Id == id);
+
+            if(curso == null)
+            {
+                return NotFound();
+            }
+
+            return mapper.Map<CursoDTO>(curso);
+        }
+
         [HttpPost]
         public async Task<ActionResult> Post(int claseId, CursoCreacionDTO cursoCreacionDTO)
         {
@@ -46,7 +59,10 @@ namespace WebApiAlumnosSeg.Controllers
             curso.ClaseId = claseId;
             dbContext.Add(curso);
             await dbContext.SaveChangesAsync();
-            return Ok();
+
+            var cursoDTO = mapper.Map<CursoDTO>(curso);
+
+            return CreatedAtRoute("obtenerCurso", new {id = curso.Id, claseId = claseId }, cursoDTO);
         }
     }
 }

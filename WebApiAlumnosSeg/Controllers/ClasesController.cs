@@ -26,7 +26,7 @@ namespace WebApiAlumnosSeg.Controllers
             return await dbContext.Clases.ToListAsync();
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int}", Name = "obtenerClase")]
         public async Task<ActionResult<ClaseDTOConAlumnos>> GetById(int id)
         {
             var clase =  await dbContext.Clases
@@ -69,7 +69,10 @@ namespace WebApiAlumnosSeg.Controllers
 
             dbContext.Add(clase);
             await dbContext.SaveChangesAsync();
-            return Ok();
+
+            var claseDTO = mapper.Map<ClaseDTO>(clase);
+
+            return CreatedAtRoute("obtenerClase", new {id = clase.Id}, claseDTO);
         }
 
         [HttpPut("{id:int}")]

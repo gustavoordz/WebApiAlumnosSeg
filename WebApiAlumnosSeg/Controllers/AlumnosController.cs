@@ -27,8 +27,8 @@ namespace WebApiAlumnosSeg.Controllers
         }
 
 
-        [HttpGet("{id:int}")] //Se puede usar ? para que no sea obligatorio el parametro /{param=Gustavo}  getAlumno/{id:int}/
-        public async Task<ActionResult<GetAlumnoDTO>> Get(int id)
+        [HttpGet("{id:int}", Name = "obteneralumno")] //Se puede usar ? para que no sea obligatorio el parametro /{param=Gustavo}  getAlumno/{id:int}/
+        public async Task<ActionResult<AlumnoDTOConClases>> Get(int id)
         {
             var alumno = await dbContext.Alumnos
                 .Include(alumnoDB => alumnoDB.AlumnoClase)
@@ -40,7 +40,7 @@ namespace WebApiAlumnosSeg.Controllers
                 return NotFound();
             }
 
-            return mapper.Map<GetAlumnoDTO>(alumno);
+            return mapper.Map<AlumnoDTOConClases>(alumno);
             
         }
 
@@ -64,17 +64,15 @@ namespace WebApiAlumnosSeg.Controllers
             {
                 return BadRequest($"Ya existe un autor con el nombre {alumnoDto.Nombre}");
             }
-
-            //var alumno = new Alumno()
-            //{
-            //    Nombre = alumnoDto.Nombre
-            //};
            
             var alumno = mapper.Map<Alumno>(alumnoDto);
 
             dbContext.Add(alumno);
             await dbContext.SaveChangesAsync();
-            return Ok();
+
+            var alumnoDTO = mapper.Map<GetAlumnoDTO>(alumno);
+
+            return CreatedAtRoute("obteneralumno", new {id = alumno.Id}, alumnoDTO);
         }
 
         [HttpPut("{id:int}")] // api/alumnos/1
