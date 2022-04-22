@@ -76,7 +76,7 @@ namespace WebApiAlumnosSeg.Controllers
         }
 
         [HttpPut("{id:int}")] // api/alumnos/1
-        public async Task<ActionResult> Put(Alumno alumno, int id)
+        public async Task<ActionResult> Put(AlumnoDTO alumnoCreacionDTO, int id)
         {
             var exist = await dbContext.Alumnos.AnyAsync(x => x.Id == id);
             if (!exist)
@@ -84,14 +84,12 @@ namespace WebApiAlumnosSeg.Controllers
                 return NotFound();
             }
 
-            if (alumno.Id != id)
-            {
-                return BadRequest("El id del alumno no coincide con el establecido en la url.");
-            }
+            var alumno = mapper.Map<Alumno>(alumnoCreacionDTO);
+            alumno.Id = id;
 
             dbContext.Update(alumno);
             await dbContext.SaveChangesAsync();
-            return Ok();
+            return NoContent();
         }
 
         [HttpDelete("{id:int}")]

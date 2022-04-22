@@ -64,5 +64,29 @@ namespace WebApiAlumnosSeg.Controllers
 
             return CreatedAtRoute("obtenerCurso", new {id = curso.Id, claseId = claseId }, cursoDTO);
         }
+
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult> Put(int claseId, int id, CursoCreacionDTO cursoCreacionDTO)
+        {
+            var existeClase = await dbContext.Clases.AnyAsync(claseDB => claseDB.Id == claseId);
+            if (!existeClase)
+            {
+                return NotFound();
+            }
+
+            var existeCurso = await dbContext.Cursos.AnyAsync(cursoDB => cursoDB.Id == id);
+            if (!existeCurso)
+            {
+                return NotFound();
+            }
+
+            var curso = mapper.Map<Cursos>(cursoCreacionDTO);
+            curso.Id = id;
+            curso.ClaseId = claseId;
+
+            dbContext.Update(curso);
+            await dbContext.SaveChangesAsync();
+            return NoContent();
+        }
     }
 }

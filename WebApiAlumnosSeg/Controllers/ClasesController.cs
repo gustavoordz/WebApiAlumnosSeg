@@ -59,13 +59,7 @@ namespace WebApiAlumnosSeg.Controllers
 
             var clase = mapper.Map<Clase>(claseCreacionDTO);
 
-            if(clase.AlumnoClase != null)
-            {
-                for(int i = 0; i < clase.AlumnoClase.Count; i++)
-                {
-                    clase.AlumnoClase[i].Orden = i;
-                }
-            }
+            OrdenarPorAlumnos(clase);
 
             dbContext.Add(clase);
             await dbContext.SaveChangesAsync();
@@ -75,25 +69,56 @@ namespace WebApiAlumnosSeg.Controllers
             return CreatedAtRoute("obtenerClase", new {id = clase.Id}, claseDTO);
         }
 
+        //[HttpPut("{id:int}")]
+        //public async Task<ActionResult> Put(Clase clase, int id)
+        //{
+        //    var exist = await dbContext.Clases.AnyAsync(x => x.Id == id);
+
+        //    if (!exist)
+        //    {
+        //        return NotFound("La clase especificada no existe. ");
+        //    }
+
+        //    if (clase.Id != id)
+        //    {
+        //        return BadRequest("El id de la clase no coincide con el establecido en la url. ");
+        //    }
+
+        //    dbContext.Update(clase);
+        //    await dbContext.SaveChangesAsync();
+        //    return Ok();
+
+        //}
+
         [HttpPut("{id:int}")]
-        public async Task<ActionResult> Put(Clase clase, int id)
+        public async Task<ActionResult> Put(int id, ClaseCreacionDTO claseCreacionDTO)
         {
-            var exist = await dbContext.Clases.AnyAsync(x => x.Id == id);
+            var claseDB = await dbContext.Clases
+                .Include(x => x.AlumnoClase)
+                .FirstOrDefaultAsync(x => x.Id == id);
 
-            if (!exist)
+            if(claseDB == null)
             {
-                return NotFound("La clase especificada no existe. ");
+                return NotFound();
             }
 
-            if (clase.Id != id)
-            {
-                return BadRequest("El id de la clase no coincide con el establecido en la url. ");
-            }
+            claseDB = mapper.Map(claseCreacionDTO, claseDB);
 
-            dbContext.Update(clase);
+            OrdenarPorAlumnos(claseDB);
+
             await dbContext.SaveChangesAsync();
-            return Ok();
+            return NoContent();
+        }
 
+        private void OrdenarPorAlumnos(Clase clase)
+        {
+            if (clase.AlumnoClase != null)
+            {
+                for (int i = 0; i < clase.AlumnoClase.Count; i++)
+                {
+                    clase.AlumnoClase[i].Orden = i;
+                }
+            }
         }
 
         [HttpDelete("{id:int}")]
