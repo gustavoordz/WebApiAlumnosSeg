@@ -17,6 +17,7 @@ namespace WebApiAlumnosSeg.Utilidades
             CreateMap<Clase, ClaseDTO>();
             CreateMap<Clase, ClaseDTOConAlumnos>()
                 .ForMember(claseDTO => claseDTO.Alumnos, opciones => opciones.MapFrom(MapClaseDTOAlumnos));
+            CreateMap<ClasePatchDTO, Clase>().ReverseMap();
             CreateMap<CursoCreacionDTO, Cursos>();
             CreateMap<Cursos,CursoDTO>();
         }

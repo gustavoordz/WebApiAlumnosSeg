@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiAlumnosSeg.DTOs;
@@ -34,6 +35,11 @@ namespace WebApiAlumnosSeg.Controllers
                 .ThenInclude(alumnoClaseDB => alumnoClaseDB.Alumno)
                 .Include(cursoDB => cursoDB.Cursos)
                 .FirstOrDefaultAsync(x => x.Id == id);
+
+            if(clase == null)
+            {
+                return NotFound();
+            }
 
             clase.AlumnoClase = clase.AlumnoClase.OrderBy(x => x.Orden).ToList();
 
@@ -110,17 +116,6 @@ namespace WebApiAlumnosSeg.Controllers
             return NoContent();
         }
 
-        private void OrdenarPorAlumnos(Clase clase)
-        {
-            if (clase.AlumnoClase != null)
-            {
-                for (int i = 0; i < clase.AlumnoClase.Count; i++)
-                {
-                    clase.AlumnoClase[i].Orden = i;
-                }
-            }
-        }
-
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> Delete(int id)
         {
@@ -136,6 +131,43 @@ namespace WebApiAlumnosSeg.Controllers
             dbContext.Remove(new Clase { Id = id });
             await dbContext.SaveChangesAsync();
             return Ok();
+        }
+
+        private void OrdenarPorAlumnos(Clase clase)
+        {
+            if (clase.AlumnoClase != null)
+            {
+                for (int i = 0; i < clase.AlumnoClase.Count; i++)
+                {
+                    clase.AlumnoClase[i].Orden = i;
+                }
+            }
+        }
+
+        [HttpPatch("{id:int}")]
+        public async Task<ActionResult> Patch(int id, JsonPatchDocument<ClasePatchDTO> patchDocument)
+        {
+            if(patchDocument == null) { return BadRequest(); }
+
+            var claseDB = await dbContext.Clases.FirstOrDefaultAsync(x => x.Id == id);  
+
+            if(claseDB == null) { return NotFound(); }
+
+            var claseDTO = mapper.Map<ClasePatchDTO>(claseDB);
+
+            patchDocument.ApplyTo(claseDTO);
+
+            var isValid = TryValidateModel(claseDTO);
+
+            if (!isValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            mapper.Map(claseDTO, claseDB);
+
+            await dbContext.SaveChangesAsync();
+            return NoContent();
         }
     }
 }

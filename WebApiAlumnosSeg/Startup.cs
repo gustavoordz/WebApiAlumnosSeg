@@ -22,7 +22,7 @@ namespace WebApiAlumnosSeg
             {
                 opciones.Filters.Add(typeof(FiltroDeExcepcion));
             }).AddJsonOptions(x =>
-            x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+            x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles).AddNewtonsoftJson();
 
             // Se encarga de configurar ApplicationDbContext como un servicio
             services.AddDbContext<ApplicationDbContext>(options =>

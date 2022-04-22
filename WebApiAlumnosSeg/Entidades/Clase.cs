@@ -11,6 +11,8 @@ namespace WebApiAlumnosSeg.Entidades
         [PrimeraLetraMayuscula]
         public string Nombre { get; set; }
 
+        public DateTime? FechaCreacion { get; set; }
+
         public List<Cursos> Cursos { get; set; }
 
         public List<AlumnoClase> AlumnoClase { get; set; }

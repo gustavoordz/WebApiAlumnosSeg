@@ -3,7 +3,7 @@ using WebApiAlumnosSeg.Validaciones;
 
 namespace WebApiAlumnosSeg.DTOs
 {
-    public class ClaseCreacionDTO
+    public class ClasePatchDTO
     {
         [Required]
         [StringLength(maximumLength: 250, ErrorMessage = "El campo {0} solo puede tener hasta 250 caracteres")]
@@ -11,7 +11,5 @@ namespace WebApiAlumnosSeg.DTOs
         public string Nombre { get; set; }
 
         public DateTime FechaCreacion { get; set; }
-
-        public List<int> AlumnosIds { get; set; }
     }
 }
