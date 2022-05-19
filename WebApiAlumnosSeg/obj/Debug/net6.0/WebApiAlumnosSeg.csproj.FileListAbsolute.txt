@@ -61,3 +61,10 @@ C:\Users\Gustavo Rdz\Documents\Gustavo\Proyectos\WebApiAlumnosSeg\WebApiAlumnosS
 C:\Users\Gustavo Rdz\Documents\Gustavo\Proyectos\WebApiAlumnosSeg\WebApiAlumnosSeg\obj\Debug\net6.0\WebApiAlumnosSeg.genruntimeconfig.cache
 C:\Users\Gustavo Rdz\Documents\Gustavo\Proyectos\WebApiAlumnosSeg\WebApiAlumnosSeg\bin\Debug\net6.0\AutoMapper.dll
 C:\Users\Gustavo Rdz\Documents\Gustavo\Proyectos\WebApiAlumnosSeg\WebApiAlumnosSeg\bin\Debug\net6.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Users\Gustavo Rdz\Documents\Gustavo\Proyectos\WebApiAlumnosSeg\WebApiAlumnosSeg\bin\Debug\net6.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\Gustavo Rdz\Documents\Gustavo\Proyectos\WebApiAlumnosSeg\WebApiAlumnosSeg\bin\Debug\net6.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Users\Gustavo Rdz\Documents\Gustavo\Proyectos\WebApiAlumnosSeg\WebApiAlumnosSeg\bin\Debug\net6.0\Newtonsoft.Json.dll
+C:\Users\Gustavo Rdz\Documents\Gustavo\Proyectos\WebApiAlumnosSeg\WebApiAlumnosSeg\bin\Debug\net6.0\Newtonsoft.Json.Bson.dll
+C:\Users\Gustavo Rdz\Documents\Gustavo\Proyectos\WebApiAlumnosSeg\WebApiAlumnosSeg\obj\Debug\net6.0\WebApiAlumnosSeg.Properties.Resources.resources
+C:\Users\Gustavo Rdz\Documents\Gustavo\Proyectos\WebApiAlumnosSeg\WebApiAlumnosSeg\obj\Debug\net6.0\WebApiAlumnosSeg.csproj.GenerateResource.cache
+C:\Users\Gustavo Rdz\Documents\Gustavo\Proyectos\WebApiAlumnosSeg\WebApiAlumnosSeg\bin\Debug\net6.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll

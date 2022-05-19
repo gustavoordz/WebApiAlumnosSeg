@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApiAlumnosSeg.DTOs;
@@ -8,18 +10,33 @@ namespace WebApiAlumnosSeg.Controllers
 {
     [ApiController]
     [Route("alumnos")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "EsAdmin")]
     public class AlumnosController : ControllerBase
     {
         private readonly ApplicationDbContext dbContext;
         private readonly IMapper mapper;
+        private readonly IConfiguration configuration;
 
-        public AlumnosController(ApplicationDbContext context, IMapper mapper)
+        public AlumnosController(ApplicationDbContext context, IMapper mapper, IConfiguration configuration)
         {
             this.dbContext = context;
             this.mapper = mapper;
+            this.configuration = configuration;
         }
 
+        //[HttpGet("configuraciones")]
+        //public ActionResult<string> ObtenerConfiguracion()
+        //{
+        //    var configDirecta = configuration["apellido"];
+        //    var configMapeada = configuration["connectionStrings:defaultConnection"];
+
+        //    Console.WriteLine("Se obtiene valor de configuracion directo: " + configDirecta);
+        //    Console.WriteLine("Se obtiene valor de configuracion mappeado: " + configMapeada);
+        //    return Ok();
+        //}
+
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult<List<GetAlumnoDTO>>> Get()
         {
             var alumnos = await dbContext.Alumnos.ToListAsync();
